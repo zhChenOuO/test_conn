@@ -1,0 +1,29 @@
+apiVersion: v1
+data:
+  app_dev.yaml: |-
+    ## log 設定
+    log:
+      app_id: test_conn
+      env: dev
+      level: 0
+      local: true
+
+    http:
+      port: 8080
+      debug: true
+      mode: release
+
+    ### grpc
+    grpc:
+      address: 0.0.0.0:8090
+      debug: true
+
+    # Client config
+    client:
+      test_conn:
+        addr: test-conn-server-svc.default.svc.cluster.local
+        port: 8090
+
+kind: ConfigMap
+metadata:
+  name: test-conn-config

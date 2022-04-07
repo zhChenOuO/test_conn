@@ -1,0 +1,13 @@
+syntax = "proto3";
+package proto;
+
+option go_package = "proto";
+
+service TestConnService {
+    rpc Ping(PingReq) returns (PingResp);
+}
+
+message PingReq {
+}
+message PingResp {
+}

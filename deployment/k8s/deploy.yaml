@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-conn-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: test-conn-server
+  template:
+    metadata:
+      labels:
+        app: test-conn-server
+    spec:
+      containers:
+        - args:
+            - server
+          command:
+            - ./test_conn
+          env:
+            - name: CONFIG_PATH
+              value: /app/deployment/config/
+            - name: CONFIG_NAME
+              value: app_dev
+          volumeMounts:
+            - mountPath: /app/deployment/config/app_dev.yaml
+              name: test-conn-config
+              subPath: app_dev.yaml
+          image: docker.io/osbornouo/test_conn:latest
+          imagePullPolicy: Always
+          name: test-conn-server
+          ports:
+            - containerPort: 8090
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: 64Mi
+            requests:
+              cpu: "0.1"
+              memory: 32Mi
+      volumes:
+        - configMap:
+            items:
+              - key: app_dev.yaml
+                path: app_dev.yaml
+            name: test-conn-config
+          name: test-conn-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-conn-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-conn-client
+  template:
+    metadata:
+      labels:
+        app: test-conn-client
+    spec:
+      containers:
+        - args:
+            - client
+          command:
+            - ./test_conn
+          env:
+            - name: CONFIG_PATH
+              value: /app/deployment/config/
+            - name: CONFIG_NAME
+              value: app_dev
+          volumeMounts:
+            - mountPath: /app/deployment/config/app_dev.yaml
+              name: test-conn-config
+              subPath: app_dev.yaml
+          image: docker.io/osbornouo/test_conn:latest
+          imagePullPolicy: Always
+          name: test-conn-client
+          ports:
+            - containerPort: 8090
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: 64Mi
+            requests:
+              cpu: "0.1"
+              memory: 32Mi
+      volumes:
+        - configMap:
+            items:
+              - key: app_dev.yaml
+                path: app_dev.yaml
+            name: test-conn-config
+          name: test-conn-config

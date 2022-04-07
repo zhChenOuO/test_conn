@@ -1,0 +1,22 @@
+## log 設定
+log:
+  app_id: test_conn
+  env: dev
+  level: 0
+  local: false
+
+http:
+  port: 8080
+  debug: true
+  mode: release
+
+### grpc
+grpc:
+  address: 0.0.0.0:8090
+  debug: true
+
+# Client config
+client:
+  test_conn:
+    addr: test_conn_server.default.svc.cluster.local
+    port: 8090
